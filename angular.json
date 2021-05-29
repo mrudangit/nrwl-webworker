@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "hello-nrwl",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "css"
+    }
+  },
+  "projects": {
+    "hello-nrwl": {
+      "projectType": "application",
+      "root": "apps/hello-nrwl",
+      "sourceRoot": "apps/hello-nrwl/src",
+      "prefix": "sample",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/hello-nrwl",
+            "index": "apps/hello-nrwl/src/index.html",
+            "main": "apps/hello-nrwl/src/main.ts",
+            "polyfills": "apps/hello-nrwl/src/polyfills.ts",
+            "tsConfig": "apps/hello-nrwl/tsconfig.app.json",
+            "assets": [
+              "apps/hello-nrwl/src/favicon.ico",
+              "apps/hello-nrwl/src/assets"
+            ],
+            "styles": ["apps/hello-nrwl/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/hello-nrwl/src/environments/environment.ts",
+                  "with": "apps/hello-nrwl/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "hello-nrwl:build:production"
+            },
+            "development": {
+              "browserTarget": "hello-nrwl:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "hello-nrwl:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/hello-nrwl/src/**/*.ts",
+              "apps/hello-nrwl/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/hello-nrwl"],
+          "options": {
+            "jestConfig": "apps/hello-nrwl/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "hello-nrwl-e2e": {
+      "root": "apps/hello-nrwl-e2e",
+      "sourceRoot": "apps/hello-nrwl-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/hello-nrwl-e2e/cypress.json",
+            "tsConfig": "apps/hello-nrwl-e2e/tsconfig.e2e.json",
+            "devServerTarget": "hello-nrwl:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "hello-nrwl:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/hello-nrwl-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
